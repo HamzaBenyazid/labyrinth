@@ -8,15 +8,16 @@
 
 typedef struct _stack
 {
-    int data;
+    int colonne;
+    int ligne;
     struct _stack *suivant;
     
 }stack;
 
-void append(stack **s,int data);
-void afficherStack(stack *s);
+void append(stack **s,int i,int j);
+//void afficherStack(stack *s);
 void pop(stack **s);
-int top(stack *s);
+int* top(stack *s);
 int estVide(stack *s);
 
 #endif
