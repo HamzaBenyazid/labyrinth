@@ -44,6 +44,67 @@ int randomPath(matriceDesCell m,int line,int col,int* visited)
         return tab[rand()%count];
     }
 }
+matriceDesCell generate_maze()
+{
+    stack* maze_stack;
+    matriceDesCell maze = (cell*)malloc(N*N*sizeof(cell));
+    int* visited = (int*)malloc(N*N*sizeof(int));
+    int way;
+    int i, j, count = 1;
+
+    init(&maze);
+    // Initialisé la matrice des cellules visitées
+    for(i=0;i<N*N;i++)
+    {
+        *(visited+i) = 0;
+    }
+    
+    i = 0;
+    j = 0;
+    while(count < N*N)
+    {
+        way = randomPath(maze, i, j,visited);
+        *(visited+i*N+j) = 1;
+        switch(way)
+        {
+            case up : 
+                    (maze+i*N+j)->up = 1;
+                    (maze+(i-1)*N+j)->down = 1;
+                    append(&maze_stack, i, j);
+                    count++;
+                    i--;
+                    break;
+            case down :
+                    (maze+i*N+j)->down = 1;
+                    (maze+(i+1)*N+j)->up = 1;
+                    append(&maze_stack, i, j);
+                    count++;
+                    i++;
+                    break;
+            case right :
+                    (maze+i*N+j)->right = 1;
+                    (maze+i*N+(j+1))->left = 1;
+                    append(&maze_stack, i, j);
+                    count++;
+                    j++;
+                    break;
+            case left :
+                    (maze+i*N+j)->left = 1;
+                    (maze+i*N+(j-1))->right = 1;
+                    append(&maze_stack, i, j);
+                    count++;
+                    j--;
+                    break;
+            case -1 :
+                    pop(&maze_stack);
+                    i = *top(maze_stack);
+                    j = *(top(maze_stack)+1);
+                    break;
+        }
+    }
+    return maze;
+}
+
 /*void main()
 {
     int visited[3][3]={{0}};
@@ -57,3 +118,4 @@ int randomPath(matriceDesCell m,int line,int col,int* visited)
     printf("%d",x);
     
 }*/
+
