@@ -1,33 +1,23 @@
 #include"maze_generator.h"
 #include"stack.h"
 #include"Affichage.h"
-
+#include"maze_solver.h"
+#include"Affichage_SDL.h"
 
 int main()
 {
     srand(time(0));
     matriceDesCell m;
-    char* matrix_2_show;
+    char* matrix_2_show=NULL;
     m = generate_maze();
-    /*m=(cell*)malloc(N*N*sizeof(cell));
-    init(&m);
-    fill(m,0,0,-1,1,0,-1);
-    fill(m,0,1,-1,0,1,1);
-    fill(m,0,2,-1,1,0,0);
-    fill(m,0,3,-1,-1,1,1);
-    fill(m,1,0,0,0,1,-1);
-    fill(m,1,1,1,1,0,0);
-    fill(m,1,2,0,1,0,1);
-    fill(m,1,3,1,-1,1,1);
-    fill(m,2,0,1,1,1,-1);
-    fill(m,2,1,0,1,0,1);
-    fill(m,2,2,0,0,0,1);
-    fill(m,2,3,1,-1,1,0);
-    fill(m,3,0,1,1,-1,-1);
-    fill(m,3,1,0,1,-1,1);
-    fill(m,3,2,0,1,-1,1);
-    fill(m,3,3,1,-1,-1,1);*/
     matrix_2_show=matrix2show(m);
-    affichage(matrix_2_show);
+    /*affichage(matrix_2_show);
+    int entre[2]={0,0};
+    int sortie[2]={N-1,N-1};
+    stack *s=NULL;
+    s=solveMaze(m,entre,sortie);
+    afficherStack(s);*/
+    SDL_main(matrix_2_show);
+    
     return 0;
 }

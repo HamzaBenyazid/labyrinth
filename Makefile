@@ -6,7 +6,9 @@ SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
 
-LIBRARIES	:=
+LIBRARIES	:= -lSDL -lSDL_image
+
+OS	:= 
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= labyrinth.exe

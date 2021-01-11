@@ -46,7 +46,7 @@ int randomPath(matriceDesCell m,int line,int col,int* visited)
 }
 matriceDesCell generate_maze()
 {
-    stack* maze_stack;
+    stack* maze_stack=NULL;
     matriceDesCell maze = (cell*)malloc(N*N*sizeof(cell));
     int* visited = (int*)malloc(N*N*sizeof(int));
     int way;
@@ -58,7 +58,7 @@ matriceDesCell generate_maze()
     {
         *(visited+i) = 0;
     }
-    
+
     i = 0;
     j = 0;
     while(count < N*N)
@@ -102,6 +102,8 @@ matriceDesCell generate_maze()
                     break;
         }
     }
+    free(maze_stack);
+    free(visited);
     return maze;
 }
 

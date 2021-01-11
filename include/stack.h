@@ -15,7 +15,7 @@ typedef struct _stack
 }stack;
 
 void append(stack **s,int i,int j);
-//void afficherStack(stack *s);
+void afficherStack(stack *s);
 void pop(stack **s);
 int* top(stack *s);
 int estVide(stack *s);
