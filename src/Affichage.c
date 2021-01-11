@@ -40,7 +40,7 @@ void affichage(char* matrix_2_show)
     int i,j;
     for(i=0;i<size;i++){
         for(j=0;j<size;j++){
-            printf("%c ",*(matrix_2_show+i*size+j));
+            printf("%c",*(matrix_2_show+i*size+j));
         }
         printf("\n");
     }
@@ -52,4 +52,3 @@ void fill(cell* m,int i,int j,int up, int right, int down, int left)
     (m+N*i+j)->down = down;
     (m+N*i+j)->left = left;
 }
-
