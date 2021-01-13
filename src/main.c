@@ -17,7 +17,7 @@ int main()
     stack *s=NULL;
     s=solveMaze(m,entre,sortie);
     afficherStack(s);*/
-    SDL_main(matrix_2_show);
+    SDL_main(m,matrix_2_show);
     
     return 0;
 }
