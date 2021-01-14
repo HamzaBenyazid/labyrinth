@@ -6,7 +6,11 @@
 #include<time.h>
 #include"stack.h"
 
-#define N 5
+#define N 29
+#define M 50
+
+
+
 enum direction{up,right,down,left};
 
 

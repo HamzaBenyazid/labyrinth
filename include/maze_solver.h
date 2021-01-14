@@ -14,12 +14,4 @@ stack* solveMaze(matriceDesCell m,int entre[2],int sortie[2]);
 
 
 
-
-
-
-
-
-
-
-
 #endif
