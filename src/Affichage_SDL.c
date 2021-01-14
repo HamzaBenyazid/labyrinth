@@ -90,11 +90,11 @@ int SDL_main(matriceDesCell labyrinth,char* m)
 
     SDL_Rect position;
 
-    int entre[2] = {0,0};
+    int entre[2] = {1,1};
     int sortie[2] = {N-1,M-1};
 
 
-    ecran=SDL_SetVideoMode(size_colone*cote, size_ligne*cote, 32, SDL_HWSURFACE);
+    ecran=SDL_SetVideoMode(size_colone*cote, size_ligne*cote, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
 
     if (ecran == NULL) // Si l'ouverture a échoué, on le note et on arrête
     {
@@ -105,24 +105,38 @@ int SDL_main(matriceDesCell labyrinth,char* m)
     position.x=position.y=0;
     maze=create_surface(m);
     solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
-    SDL_Solution(labyrinth,solved_maze,entre,sortie);
-    SDL_BlitSurface(solved_maze,NULL,ecran,&position);
+    //SDL_Solution(labyrinth,solved_maze,entre,sortie);
+    SDL_BlitSurface(maze,NULL,ecran,&position);
     SDL_Flip(ecran);
 
-    pause();
-
-
+    play(ecran,maze,m,entre,sortie);
+    
     SDL_FreeSurface(maze);
+    SDL_FreeSurface(solved_maze);
     SDL_Quit();
     return EXIT_SUCCESS;
 }
 
 
-void pause()
+void play(SDL_Surface *ecran,SDL_Surface *maze,char *matrice,int entre[2],int sortie[2])
 {
+    SDL_Surface *maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+    int size_ligne=N*2+(N+1);
+    int size_colonne=M*2+(M+1);
     int continuer = 1;
     SDL_Event event;
- 
+    SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0};
+    int ligne=entre[0],colonne=entre[1];
+    SDL_Surface *objet=IMG_Load("objet.png");
+
+    SDL_EnableKeyRepeat(10, 30);
+    
+
+    positionObjet.x = (colonne-1)*2*cote + colonne*cote;
+    positionObjet.y = (ligne-1)*2*cote + (ligne)*cote;
+    SDL_BlitSurface(objet,NULL,maze_copy,&positionObjet);
+    SDL_BlitSurface(maze_copy,NULL,ecran,&positionMaze);
+    SDL_Flip(ecran);
     while (continuer)
     {
         SDL_WaitEvent(&event);
@@ -130,6 +144,36 @@ void pause()
         {
             case SDL_QUIT:
                 continuer = 0;
+                break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym){
+                    case SDLK_UP:
+                        if (*(matrice+(ligne-1)*size_colonne+colonne)!='#'&&*(matrice+(ligne-1)*size_colonne+colonne+1)!='#'){
+                            positionObjet.y-=cote;
+                            ligne--;
+                        }break;
+                    case SDLK_DOWN:
+                        if (*(matrice+(ligne+2)*size_colonne+colonne)!='#'&&*(matrice+(ligne+2)*size_colonne+colonne+1)!='#'){
+                            positionObjet.y+=cote;
+                            ligne++;
+                        }break;
+                    case SDLK_RIGHT:
+                        if (*(matrice+ligne*size_colonne+colonne+2)!='#'&& *(matrice+(ligne+1)*size_colonne+colonne+2)!='#'){
+                            positionObjet.x+=cote;
+                            colonne++;
+                        }break;
+                    case SDLK_LEFT:
+                        if (*(matrice+ligne*size_colonne+colonne-1)!='#'&&*(matrice+(ligne+1)*size_colonne+colonne-1)!='#'){
+                            positionObjet.x-=cote;
+                            colonne--;
+                        }break;
+                }
+                SDL_FreeSurface(maze_copy);
+                maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+                SDL_BlitSurface(objet,NULL,maze_copy,&positionObjet);
+                SDL_BlitSurface(maze_copy,NULL,ecran,&positionMaze);
+                SDL_Flip(ecran);
+                break;
         }
     }
 }

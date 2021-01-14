@@ -6,8 +6,8 @@
 #include<time.h>
 #include"stack.h"
 
-#define N 29
-#define M 50
+#define N 20
+#define M 30
 
 
 
