@@ -18,5 +18,9 @@ int main()
     s=solveMaze(m,entre,sortie);
     afficherStack(s);*/
     SDL_main(m,matrix_2_show);
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
     return 0;
 }
