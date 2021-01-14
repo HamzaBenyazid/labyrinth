@@ -18,19 +18,11 @@ SDL_Surface* create_surface(char* m)
 
     wall=IMG_Load("sol08.bmp");
 
-<<<<<<< HEAD
     for(int i=0;i<size_ligne;i++){
         for(int j=0;j<size_colone;j++){
             if (*(m+i*size_colone+j)=='#'){
                 position.x=cote*j;
                 position.y=cote*i;
-=======
-    for(int i=0;i<size;i++){
-        for(int j=0;j<size;j++){
-            if (*(m+i*size+j)=='#'){
-                position.y=32*i;
-                position.x=32*j;
->>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
                 SDL_BlitSurface(wall,NULL,maze,&position);
             }
         }
@@ -57,66 +49,28 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
     SDL_FillRect(rectangle_horiz, NULL, SDL_MapRGB(rectangle_horiz->format, 0, 255, 0)); 
 
 
-<<<<<<< HEAD
     while( path != NULL )
     {
         position.x = (path->colonne)*2*cote + (path->colonne+1)*cote;
         position.y = (path->ligne)*2*cote + (path->ligne+1)*cote;
-=======
-SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2])
-{
-    SDL_Surface* careau = NULL;
-    SDL_Surface* rectangle_horiz = NULL;
-    SDL_Surface* rectangle_verti = NULL;
-    SDL_Rect position, position_rectangle;
-    
-    stack* path = solveMaze(m, entre, sortie);
-    
-    
-    careau = SDL_CreateRGBSurface(SDL_HWSURFACE, 32*2, 32*2, 32, 0, 0, 0, 0);
-    rectangle_horiz = SDL_CreateRGBSurface(SDL_HWSURFACE, 32*2, 32, 32, 0, 0, 0, 0);
-    rectangle_verti = SDL_CreateRGBSurface(SDL_HWSURFACE, 32, 32*2, 32, 0, 0, 0, 0);
-
-    SDL_FillRect(careau, NULL, SDL_MapRGB(careau->format, 0, 255, 0)); 
-    SDL_FillRect(rectangle_verti, NULL, SDL_MapRGB(rectangle_verti->format, 0, 255, 0)); 
-    SDL_FillRect(rectangle_horiz, NULL, SDL_MapRGB(rectangle_horiz->format, 0, 255, 0)); 
-
-
-    while( path != NULL )
-    {
-        position.x = (path->colonne)*2*32 + (path->colonne+1)*32;
-        position.y = (path->ligne)*2*32 + (path->ligne+1)*32;
->>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
         if(path->suivant != NULL)
         {
             if(path->suivant->ligne == path->ligne)
             {    
                 position_rectangle.y = position.y ;
                 if(path->suivant->colonne > path->colonne)
-<<<<<<< HEAD
                     position_rectangle.x = position.x + cote*2 ;
                 else 
                     position_rectangle.x = position.x - cote ;
-=======
-                    position_rectangle.x = position.x + 32*2 ;
-                else 
-                    position_rectangle.x = position.x - 32 ;
->>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
                 SDL_BlitSurface(rectangle_verti,NULL,maze,&position_rectangle);
             }
             else 
             {    
                 position_rectangle.x = position.x ;
                 if(path->suivant->ligne > path->ligne)
-<<<<<<< HEAD
                     position_rectangle.y = position.y + cote*2 ;
                 else 
                     position_rectangle.y = position.y - cote ;
-=======
-                    position_rectangle.y = position.y + 32*2 ;
-                else 
-                    position_rectangle.y = position.y - 32 ;
->>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
                 SDL_BlitSurface(rectangle_horiz,NULL,maze,&position_rectangle);
             }
         }
@@ -137,7 +91,6 @@ int SDL_main(matriceDesCell labyrinth,char* m)
     SDL_Rect position;
 
     int entre[2] = {0,0};
-<<<<<<< HEAD
     int sortie[2] = {N-1,M-1};
 
 
@@ -148,11 +101,6 @@ int SDL_main(matriceDesCell labyrinth,char* m)
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
-=======
-    int sortie[2] = {N-1,N-1};
-
-    ecran=SDL_SetVideoMode(size*32, size*32, 32, SDL_HWSURFACE);
->>>>>>> 30bc74f14749de84cf93ea0ec7bb59b37dc680db
 
     position.x=position.y=0;
     maze=create_surface(m);
