@@ -6,6 +6,7 @@
 #include<time.h>
 #include"stack.h"
 
+
 #define N 5
 #define M 10
 
