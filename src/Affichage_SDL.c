@@ -5,22 +5,20 @@ int cote=8; //cote d'une cellule de labyrinthe
 
 SDL_Surface* create_surface(char* m)
 {
-    int size_ligne=N*2+(N+1);
-    int size_colone=M*2+(M+1);
 
     SDL_Surface *maze=NULL,*wall=NULL;
 
     SDL_Rect position;
 
-    maze = SDL_CreateRGBSurface(SDL_HWSURFACE,size_colone*cote,size_ligne*cote, 32, 0, 0, 0, 0);
+    maze = SDL_CreateRGBSurface(SDL_HWSURFACE,size_colonne*cote,size_ligne*cote, 32, 0, 0, 0, 0);
 
     SDL_FillRect(maze, NULL, SDL_MapRGB(maze->format, 255, 255, 255));
 
     wall=IMG_Load("sol08.bmp");
 
     for(int i=0;i<size_ligne;i++){
-        for(int j=0;j<size_colone;j++){
-            if (*(m+i*size_colone+j)=='#'){
+        for(int j=0;j<size_colonne;j++){
+            if (*(m+i*size_colonne+j)=='#'){
                 position.x=cote*j;
                 position.y=cote*i;
                 SDL_BlitSurface(wall,NULL,maze,&position);
@@ -83,8 +81,6 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
 
 int SDL_main(matriceDesCell labyrinth,char* m)
 {
-    int size_ligne=N*2+(N+1);
-    int size_colone=M*2+(M+1);
 
     SDL_Surface *ecran,*maze,*solved_maze;
 
@@ -94,7 +90,7 @@ int SDL_main(matriceDesCell labyrinth,char* m)
     int sortie[2] = {N-1,M-1};
 
 
-    ecran=SDL_SetVideoMode(size_colone*cote, size_ligne*cote, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    ecran=SDL_SetVideoMode(size_colonne*cote, size_ligne*cote, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
 
     if (ecran == NULL) // Si l'ouverture a échoué, on le note et on arrête
     {
@@ -120,9 +116,8 @@ int SDL_main(matriceDesCell labyrinth,char* m)
 
 void play(SDL_Surface *ecran,SDL_Surface *maze,char *matrice,int entre[2],int sortie[2])
 {
-    SDL_Surface *maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
-    int size_ligne=N*2+(N+1);
-    int size_colonne=M*2+(M+1);
+    SDL_Surface *maze_copy= NULL;
+
     int continuer = 1;
     SDL_Event event;
     SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0};

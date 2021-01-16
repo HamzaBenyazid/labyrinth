@@ -9,6 +9,8 @@
 #define N 20
 #define M 30
 
+int size_ligne;
+int size_colonne;
 
 
 enum direction{up,right,down,left};
