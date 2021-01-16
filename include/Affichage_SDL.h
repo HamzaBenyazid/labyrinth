@@ -11,6 +11,6 @@
 
 SDL_Surface* create_surface(char* m);
 int SDL_main(matriceDesCell labyrinth,char* m);
-void play(SDL_Surface *ecran,SDL_Surface *maze,char *matrice,int entre[2],int sortie[2]);
+void play(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,char *matrice,int entre[2],int sortie[2]);
 
 #endif
