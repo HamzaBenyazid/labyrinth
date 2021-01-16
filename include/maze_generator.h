@@ -6,8 +6,8 @@
 #include<time.h>
 #include"stack.h"
 
-#define N 5
-#define M 10
+#define N 25
+#define M 40
 
 int size_ligne;
 int size_colonne;

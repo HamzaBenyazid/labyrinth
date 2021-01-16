@@ -1,7 +1,7 @@
 #include"Affichage_SDL.h"
 
 
-int cote=32; //cote d'une cellule de labyrinthe
+int cote=8; //cote d'une cellule de labyrinthe
 
 SDL_Surface* create_surface(char* m)
 {
@@ -14,7 +14,7 @@ SDL_Surface* create_surface(char* m)
 
     SDL_FillRect(maze, NULL, SDL_MapRGB(maze->format, 255, 255, 255));
 
-    wall=IMG_Load("images/sol32.bmp");
+    wall=IMG_Load("images/sol08.bmp");
 
     for(int i=0;i<size_ligne;i++){
         for(int j=0;j<size_colonne;j++){
@@ -86,8 +86,7 @@ int SDL_main(matriceDesCell labyrinth,char* m)
 
     SDL_Rect position;
 
-    int entre[2] = {7,0};
-    int sortie[2] = {N-1,16};
+
 
 
     ecran=SDL_SetVideoMode(size_colonne*cote, size_ligne*cote, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -97,6 +96,9 @@ int SDL_main(matriceDesCell labyrinth,char* m)
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
+
+    int entre[2] = {0,0};
+    int sortie[2] = {N/2-1,M/2-1};
 
     position.x=position.y=0;
     maze=create_surface(m);
@@ -121,13 +123,13 @@ void play(SDL_Surface *ecran,SDL_Surface *maze,char *matrice,int entre[2],int so
     SDL_Event event;
 
     SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0},positionTrophy;
-    SDL_Surface *objet=IMG_Load("images/yellowball32.png");
-    SDL_Surface *trophy=IMG_Load("images/Trophy32.png");
+    SDL_Surface *objet=IMG_Load("images/yellowball08.png");
+    SDL_Surface *trophy=IMG_Load("images/Trophy08.png");
     SDL_EnableKeyRepeat(10, 30);
     int ligne=(3*entre[0])+1,colonne=(3*entre[1])+1;
     
-    positionTrophy.x = maze->w-3*cote;
-    positionTrophy.y = maze->h-3*cote;
+    positionTrophy.y = ((3*sortie[0])+1)*cote;
+    positionTrophy.x = ((3*sortie[1])+1)*cote;
     SDL_BlitSurface(trophy,NULL,maze,&positionTrophy);
     maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
 
