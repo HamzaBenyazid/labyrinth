@@ -1,7 +1,7 @@
 #include"Affichage_SDL.h"
 
 
-int cote=8; //cote d'une cellule de labyrinthe
+int cote=32; //cote d'une cellule de labyrinthe
 
 SDL_Surface* create_surface(char* m)
 {
@@ -16,7 +16,7 @@ SDL_Surface* create_surface(char* m)
 
     SDL_FillRect(maze, NULL, SDL_MapRGB(maze->format, 255, 255, 255));
 
-    wall=IMG_Load("sol08.bmp");
+    wall=IMG_Load("images/sol32.bmp");
 
     for(int i=0;i<size_ligne;i++){
         for(int j=0;j<size_colone;j++){
@@ -120,20 +120,26 @@ int SDL_main(matriceDesCell labyrinth,char* m)
 
 void play(SDL_Surface *ecran,SDL_Surface *maze,char *matrice,int entre[2],int sortie[2])
 {
-    SDL_Surface *maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+    SDL_Surface *maze_copy= NULL;
     int size_ligne=N*2+(N+1);
     int size_colonne=M*2+(M+1);
     int continuer = 1;
     SDL_Event event;
-    SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0};
+    SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0},positionTrophy;
     int ligne=entre[0],colonne=entre[1];
-    SDL_Surface *objet=IMG_Load("objet.png");
-
+    SDL_Surface *objet=IMG_Load("images/yellowball32.png");
+    SDL_Surface *trophy=IMG_Load("images/Trophy32.png");
     SDL_EnableKeyRepeat(10, 30);
     
+    positionTrophy.x = maze->w-3*cote;
+    positionTrophy.y = maze->h-3*cote;
+    SDL_BlitSurface(trophy,NULL,maze,&positionTrophy);
+    maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
 
     positionObjet.x = (colonne-1)*2*cote + colonne*cote;
     positionObjet.y = (ligne-1)*2*cote + (ligne)*cote;
+
+
     SDL_BlitSurface(objet,NULL,maze_copy,&positionObjet);
     SDL_BlitSurface(maze_copy,NULL,ecran,&positionMaze);
     SDL_Flip(ecran);
