@@ -86,7 +86,7 @@ int SDL_main(/*matriceDesCell labyrinth,char* m*/)
     SDL_Rect position;
 
     int continuer = 1;
-
+    int i;
     matriceDesCell labyrinth;
     char* m = NULL;
 
@@ -98,29 +98,43 @@ int SDL_main(/*matriceDesCell labyrinth,char* m*/)
         exit(EXIT_FAILURE);
     }
 
-    int entre[2] ;
-    int sortie[2] ;
+    int entre[2] = {0} ;
+    int entre_copy[2] = {0};
+    int sortie[2][2] = {0} ;
 
     position.x=position.y=0;
     while(continuer)
     {
-        entre[0] = rand()%N;
-        entre[1] = rand()%M;
-        sortie[0] = rand()%N;
-        sortie[1] = rand()%M;
         labyrinth = generate_maze();
         m = matrix2show(labyrinth);
         maze=create_surface(m);
         solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
-        SDL_Solution(labyrinth,solved_maze,entre,sortie);
-        SDL_BlitSurface(maze,NULL,ecran,&position);
-        SDL_Flip(ecran);
-    
-        play(&continuer,ecran,maze,solved_maze,labyrinth,m,entre,sortie);
+        entre[0] = rand()%N;
+        entre[1] = rand()%M;
+        i = 0;
+        while(i < 2)
+        { 
+            m = matrix2show(labyrinth);
+            maze=create_surface(m);
+            solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+            sortie[i][0] = rand()%N;
+            sortie[i][1] = rand()%M;
+            if( i == 1 && sortie[0] == sortie[1] )
+                continue;
+            SDL_Solution(labyrinth,solved_maze,entre,sortie);
+            SDL_BlitSurface(maze,NULL,ecran,&position);
+            SDL_Flip(ecran);
+
+            entre_copy[0] = entre[0] ;
+            entre_copy[1] = entre[1] ;
+            play(&continuer,ecran,maze,solved_maze,labyrinth,m,entre_copy,sortie[i]);
+            SDL_FreeSurface(solved_maze);
+            SDL_FreeSurface(maze);
+            free(m);
+            i++;
+        }
         
-        SDL_FreeSurface(maze);
-        SDL_FreeSurface(solved_maze);
-        free(m);
+        
         free(labyrinth);
     }
     SDL_Quit();
