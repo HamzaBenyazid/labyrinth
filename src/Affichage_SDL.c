@@ -1,7 +1,6 @@
 #include"Affichage_SDL.h"
 
-
-int cote=8; //cote d'une cellule de labyrinthe
+int cote=16; //cote d'une cellule de labyrinthe
 
 SDL_Surface* create_surface(char* m)
 {
@@ -14,7 +13,7 @@ SDL_Surface* create_surface(char* m)
 
     SDL_FillRect(maze, NULL, SDL_MapRGB(maze->format, 255, 255, 255));
 
-    wall=IMG_Load("images/sol08.bmp");
+    wall=IMG_Load("images/sol16.bmp");
 
     for(int i=0;i<size_ligne;i++){
         for(int j=0;j<size_colonne;j++){
@@ -79,15 +78,17 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
     return maze;
 }
 
-int SDL_main(matriceDesCell labyrinth,char* m)
+int SDL_main(/*matriceDesCell labyrinth,char* m*/)
 {
 
     SDL_Surface *ecran,*maze,*solved_maze;
 
     SDL_Rect position;
 
+    int continuer = 1;
 
-
+    matriceDesCell labyrinth;
+    char* m = NULL;
 
     ecran=SDL_SetVideoMode(size_colonne*cote, size_ligne*cote, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
 
@@ -97,36 +98,47 @@ int SDL_main(matriceDesCell labyrinth,char* m)
         exit(EXIT_FAILURE);
     }
 
-    int entre[2] = {0,0};
-    int sortie[2] = {N/2-1,M/2-1};
+    int entre[2] ;
+    int sortie[2] ;
 
     position.x=position.y=0;
-    maze=create_surface(m);
-    solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
-    SDL_Solution(labyrinth,solved_maze,entre,sortie);
-    SDL_BlitSurface(solved_maze,NULL,ecran,&position);
-    SDL_Flip(ecran);
-   
-    play(ecran,maze,solved_maze,m,entre,sortie);
+    while(continuer)
+    {
+        entre[0] = rand()%N;
+        entre[1] = rand()%M;
+        sortie[0] = rand()%N;
+        sortie[1] = rand()%M;
+        labyrinth = generate_maze();
+        m = matrix2show(labyrinth);
+        maze=create_surface(m);
+        solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+        SDL_Solution(labyrinth,solved_maze,entre,sortie);
+        SDL_BlitSurface(solved_maze,NULL,ecran,&position);
+        SDL_Flip(ecran);
     
-    SDL_FreeSurface(maze);
-    SDL_FreeSurface(solved_maze);
+        play(&continuer,ecran,maze,solved_maze,m,entre,sortie);
+        
+        SDL_FreeSurface(maze);
+        SDL_FreeSurface(solved_maze);
+        free(m);
+        free(labyrinth);
+    }
     SDL_Quit();
     return EXIT_SUCCESS;
 }
 
 
-void play(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,char *matrice,int entre[2],int sortie[2])
+void play(int* continuer,SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,char *matrice,int entre[2],int sortie[2])
 {
     SDL_Surface *maze = original_maze;
     int solved = 0;
     SDL_Surface *maze_copy= NULL;
-    int continuer = 1;
+    //int continuer = 1;
     SDL_Event event;
 
     SDL_Rect positionObjet,positionMaze={positionMaze.x=0,positionMaze.y=0},positionTrophy;
-    SDL_Surface *objet=IMG_Load("images/yellowball08.png");
-    SDL_Surface *trophy=IMG_Load("images/Trophy08.png");
+    SDL_Surface *objet=IMG_Load("images/yellowball16.png");
+    SDL_Surface *trophy=IMG_Load("images/Trophy16.png");
     SDL_EnableKeyRepeat(30, 30);
     int ligne=(3*entre[0])+1,colonne=(3*entre[1])+1;
     
@@ -142,13 +154,13 @@ void play(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maz
     SDL_BlitSurface(objet,NULL,maze_copy,&positionObjet);
     SDL_BlitSurface(maze_copy,NULL,ecran,&positionMaze);
     SDL_Flip(ecran);
-    while (continuer)
+    while (*continuer)
     {
         SDL_WaitEvent(&event);
         switch(event.type)
         {
             case SDL_QUIT:
-                continuer = 0;
+                *continuer = 0;
                 break;
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym){
@@ -193,5 +205,7 @@ void play(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maz
                 SDL_Flip(ecran);
                 break;
         }
+        if(positionTrophy.x == positionObjet.x && positionTrophy.y == positionObjet.y)
+            break;
     }
 }
