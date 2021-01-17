@@ -19,5 +19,6 @@ void afficherStack(stack *s);
 void pop(stack **s);
 int* top(stack *s);
 int estVide(stack *s);
+int length(stack *s);
 
 #endif
