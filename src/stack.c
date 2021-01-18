@@ -38,3 +38,12 @@ int estVide(stack *s)
 {
     return (s==NULL);
 }
+int length(stack *s)
+{
+    int count=0;
+    while(s!=NULL){
+        s=s->suivant;
+        count++;
+    }
+    return count;
+}
