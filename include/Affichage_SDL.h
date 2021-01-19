@@ -10,8 +10,12 @@
 #include<Affichage.h>
 #include"maze_solver.h"
 
-SDL_Surface* create_surface(char* m);
+#define FACILE 0
+#define MOYEN 1
+#define DIFFICILE 2
+
+SDL_Surface* create_surface(matriceDesCell labyrithe);
 int SDL_main(/*matriceDesCell labyrinth,char* m*/);
-void play(int* continuer,SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,matriceDesCell labyrinth,char *matrice,int entre[2],int sortie[2]);
+void interact(int* continuer,SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,matriceDesCell labyrinth,int entre[2],int sortie[2]);
 
 #endif
