@@ -14,8 +14,8 @@ int SDL_main()
     SDL_Surface *background = IMG_Load("images/background.jpg");
     SDL_Init(SDL_INIT_VIDEO);
     
-    N = 5;
-    M = 15;
+    N = 15;
+    M = 25;
 
     ecran = SDL_SetVideoMode(1390, 847, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_BlitSurface(background,NULL,ecran,&position);
@@ -227,7 +227,6 @@ void play(SDL_Surface *ecran)
     {
         labyrinth = generate_maze();
         maze=create_surface(labyrinth);
-        solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
         entre[0] = rand()%N;
         entre[1] = rand()%M;
         i = 0;
@@ -238,7 +237,7 @@ void play(SDL_Surface *ecran)
             solved_maze = SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
             sortie[i][0] = rand()%N;
             sortie[i][1] = rand()%M;
-            if( i == 1 && sortie[0] == sortie[1] )
+            if( i == 1 && sortie[0][0] == sortie[1][0] && sortie[0][1] == sortie[1][1] )
                 continue;
             SDL_Solution(labyrinth,solved_maze,entre,sortie[i]);
 
