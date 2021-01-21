@@ -1,7 +1,5 @@
 #include"maze_generator.h"
 
-size_ligne=N*2+(N+1);
-size_colonne=M*2+(M+1);
 
 void init(matriceDesCell *m)
 {

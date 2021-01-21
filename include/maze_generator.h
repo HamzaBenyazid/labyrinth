@@ -6,11 +6,9 @@
 #include<time.h>
 #include"stack.h"
 
-#define N 5
-#define M 10
+int N  ;
+int M  ;
 
-int size_ligne;
-int size_colonne;
 
 
 enum direction{up,right,down,left};

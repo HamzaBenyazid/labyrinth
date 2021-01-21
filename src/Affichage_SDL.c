@@ -10,10 +10,15 @@ int continuer = 1;
 int SDL_main()
 {
     SDL_Surface *ecran;
-
+    SDL_Rect position = {0,0};
+    SDL_Surface *background = IMG_Load("images/background.jpg");
     SDL_Init(SDL_INIT_VIDEO);
+    
+    N = 5;
+    M = 15;
 
-    ecran=SDL_SetVideoMode(1000, 600, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    ecran = SDL_SetVideoMode(1390, 847, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    SDL_BlitSurface(background,NULL,ecran,&position);
 
     choix=MOYEN;
 
@@ -27,6 +32,8 @@ int SDL_main()
 
 SDL_Surface* create_surface(matriceDesCell labyrinthe)
 {
+    int size_ligne=N*2+(N+1);
+    int size_colonne=M*2+(M+1);
 
     char* m=matrix2show(labyrinthe);
 
@@ -106,6 +113,9 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
 }
 void interact(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,matriceDesCell labyrinth ,int entre[2],int sortie[2])
 {
+    int size_ligne=N*2+(N+1);
+    int size_colonne=M*2+(M+1);
+    
     //Les surfaces utilisees
     SDL_Surface *maze = original_maze;
     SDL_Surface *maze_copy= NULL;
@@ -256,34 +266,33 @@ int Menu(SDL_Surface *ecran)
     SDL_Surface* start = NULL;
     SDL_Surface* controls = NULL;
     SDL_Surface* quit = NULL;
+    SDL_Surface *background = IMG_Load("images/background.jpg");
     SDL_Event event;
     SDL_Rect position_start, position_controls, position_quit;
     SDL_Rect position_menu = {0,0};
 
     menu = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w,ecran->h,32,0,0,0,0);
-    SDL_FillRect(menu,NULL,SDL_MapRGB(menu->format,255,255,255));
 
-    start = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w/6,ecran->h/6,32,0,0,0,0);
-    SDL_FillRect(start,NULL,SDL_MapRGB(start->format,255,0,0));
+    start = IMG_Load("images/start.png");
+    
+    controls = IMG_Load("images/controls.png"); 
 
-    controls = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w/6,ecran->h/6,32,0,0,0,0);
-    SDL_FillRect(controls,NULL,SDL_MapRGB(controls->format,0,255,0));
+    quit = IMG_Load("images/quit.png");
 
-    quit = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w/6,ecran->h/6,32,0,0,0,0);
-    SDL_FillRect(quit,NULL,SDL_MapRGB(quit->format,0,0,255));
-
+    SDL_BlitSurface(background,NULL,menu,&position_menu);
 
     position_start.x = ( ecran->w - start->w )/2;
-    position_start.y = ( ecran->h - start->h )/4;
+    position_start.y = 3.5*( ecran->h - start->h )/8;
     SDL_BlitSurface(start,NULL,menu,&position_start);
 
     position_controls.x = ( ecran->w - controls->w )/2;
-    position_controls.y = 2*( ecran->h - controls->h )/4;
+    position_controls.y = 5.5*( ecran->h - controls->h )/8;
     SDL_BlitSurface(controls,NULL,menu,&position_controls);
 
     position_quit.x = ( ecran->w - quit->w )/2;
-    position_quit.y = 3*( ecran->h - quit->h )/4;
+    position_quit.y = 7.5*( ecran->h - quit->h )/8;
     SDL_BlitSurface(quit,NULL,menu,&position_quit);
+    
     
     SDL_BlitSurface(menu,NULL,ecran,&position_menu);
     SDL_Flip(ecran);
@@ -303,7 +312,7 @@ int Menu(SDL_Surface *ecran)
                 case SDL_BUTTON_LEFT:
                     if( event.button.x >= position_start.x && event.button.x <= position_start.x + start->w && event.button.y >= position_start.y && event.button.y <= position_start.y + start->h  )
                     {
-                        SDL_FillRect(ecran,NULL,SDL_MapRGB(ecran->format,0,0,0));
+                        SDL_BlitSurface(background,NULL,ecran,&position_menu);
                         return 1;
                     }
                     else if( event.button.x >= position_controls.x && event.button.x <= position_controls.x + controls->w && event.button.y >= position_controls.y && event.button.y <= position_controls.y + controls->h  )
