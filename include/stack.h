@@ -20,5 +20,6 @@ void pop(stack **s);
 int* top(stack *s);
 int estVide(stack *s);
 int length(stack *s);
+void free_stack(stack *s);
 
 #endif

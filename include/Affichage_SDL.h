@@ -14,8 +14,11 @@
 #define MOYEN 1
 #define DIFFICILE 2
 
-SDL_Surface* create_surface(matriceDesCell labyrithe);
 int SDL_main();
-void interact(SDL_Surface *ecran,SDL_Surface *original_maze, SDL_Surface *solved_maze,matriceDesCell labyrinth,int entre[2],int sortie[2]);
+SDL_Surface* create_surface(matriceDesCell labyrithe);
+SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2]);
+void interact(SDL_Surface *ecran,SDL_Surface *original_maze, matriceDesCell labyrinth,int entre[2],int sortie[2]);
+void play(SDL_Surface* ecran);
+int Menu(SDL_Surface* ecran);
 
 #endif

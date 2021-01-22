@@ -19,7 +19,13 @@ void afficherStack(stack *s)
 }
 void pop(stack **s)
 {
-    if (!estVide(*s)) *s=(*s)->suivant;
+    stack* previous;
+    if (!estVide(*s)) 
+    {
+        previous = *s;
+        *s=(*s)->suivant;
+        free(previous);
+    }
 }
 
 int* top(stack *s) 
@@ -46,4 +52,16 @@ int length(stack *s)
         count++;
     }
     return count;
+}
+
+void free_stack(stack *s)
+{
+    stack* previous;
+
+    while(s != NULL)
+    {
+        previous = s;
+        s = s->suivant;
+        free(previous);
+    }
 }

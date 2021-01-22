@@ -103,7 +103,7 @@ matriceDesCell generate_maze()
                     break;
         }
     }
-    free(maze_stack);
+    free_stack(maze_stack);
     free(visited);
     return maze;
 }
