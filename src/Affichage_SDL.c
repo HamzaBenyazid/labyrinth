@@ -11,13 +11,13 @@ int SDL_main()
 {
     SDL_Surface *ecran;
     SDL_Rect position = {0,0};
-    SDL_Surface *background = IMG_Load("images/background.jpg");
+    SDL_Surface *background = IMG_Load("images/background.png");
     SDL_Init(SDL_INIT_VIDEO);
     
-    N = 15;
-    M = 25;
+    N = 14;
+    M = 24;
 
-    ecran = SDL_SetVideoMode(1390, 847, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    ecran = SDL_SetVideoMode(1200, 701, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_BlitSurface(background,NULL,ecran,&position);
 
     choix=MOYEN;
@@ -261,12 +261,15 @@ int Menu(SDL_Surface *ecran)
     SDL_Surface* start = NULL;
     SDL_Surface* controls = NULL;
     SDL_Surface* quit = NULL;
-    SDL_Surface *background = IMG_Load("images/background.jpg");
+    SDL_Surface* title = NULL;
+    SDL_Surface *background = IMG_Load("images/background.png");
     SDL_Event event;
-    SDL_Rect position_start, position_controls, position_quit;
+    SDL_Rect position_start, position_controls, position_quit, position_title;
     SDL_Rect position_menu = {0,0};
 
     menu = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w,ecran->h,32,0,0,0,0);
+
+    title = IMG_Load("images/labyrinthe.png");
 
     start = IMG_Load("images/start.png");
     
@@ -276,6 +279,11 @@ int Menu(SDL_Surface *ecran)
 
     SDL_BlitSurface(background,NULL,menu,&position_menu);
 
+    position_title.x = ( ecran->w - title->w )/2;
+    position_title.y = ( ecran->h - title->h )/8;
+    SDL_BlitSurface(title,NULL,menu,&position_title);
+
+    
     position_start.x = ( ecran->w - start->w )/2;
     position_start.y = 3.5*( ecran->h - start->h )/8;
     SDL_BlitSurface(start,NULL,menu,&position_start);
