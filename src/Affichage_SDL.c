@@ -19,12 +19,31 @@ int SDL_main()
 
     ecran = SDL_SetVideoMode(1200, 701, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_BlitSurface(background,NULL,ecran,&position);
-
-    choix=MOYEN;
-
-    if( Menu(ecran) == 1 )
-        play(ecran);
-
+    
+    while (continuer){
+        switch(menu1(ecran)){
+            case 1: switch(choix=menu2(ecran))
+                {
+                    case FACILE :
+                        N=5;
+                        M=10;
+                        play(ecran);
+                        break;
+                    case MOYEN :
+                        N=14;
+                        M=24;
+                        play(ecran);
+                        break;
+                    case DIFFICILE :
+                        N=25;
+                        M=40;
+                        play(ecran);
+                        break;
+                    break;
+                }
+                break;
+        }
+    }
     SDL_FreeSurface(background);
     SDL_Quit();
 
@@ -122,7 +141,7 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
     return maze;
 }
 
-void interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyrinth ,int entre[2],int sortie[2])
+int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyrinth ,int entre[2],int sortie[2])
 {
     //int size_ligne=N*2+(N+1); //unused_variable
     int size_colonne=M*2+(M+1);
@@ -166,6 +185,12 @@ void interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyr
                 break;
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym){
+                    case SDLK_ESCAPE:
+                        SDL_FreeSurface(maze_copy);
+                        SDL_FreeSurface(objet);
+                        SDL_FreeSurface(trophy);
+                        free(matrice);
+                        return 0;
                     case SDLK_UP:
                         if (*(matrice+(ligne-1)*size_colonne+colonne)!='#'&&*(matrice+(ligne-1)*size_colonne+colonne+1)!='#'){
                             positionObjet.y-=cote;
@@ -215,7 +240,7 @@ void interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyr
             SDL_FreeSurface(objet);
             SDL_FreeSurface(trophy);
             free(matrice);
-            break;
+            return 1;
         }
     }
 }
@@ -247,7 +272,11 @@ void play(SDL_Surface *ecran)
                 continue;
             }
 
-            interact(ecran,maze,labyrinth,entre,sortie[i]);
+            if (interact(ecran,maze,labyrinth,entre,sortie[i])==0){
+                SDL_FreeSurface(maze);
+                free(labyrinth);
+                return;
+            }
             SDL_FreeSurface(maze);
             i++;
         }
@@ -255,7 +284,7 @@ void play(SDL_Surface *ecran)
     }
 }
 
-int Menu(SDL_Surface *ecran)
+int menu1(SDL_Surface *ecran)
 {
     SDL_Surface* menu = NULL;
     SDL_Surface* start = NULL;
@@ -308,7 +337,7 @@ int Menu(SDL_Surface *ecran)
         {
             case SDL_QUIT:
                     continuer = 0;
-                    break;    
+                    break; 
             case SDL_MOUSEBUTTONUP :
                 switch (event.button.button)
                 {
@@ -334,6 +363,107 @@ int Menu(SDL_Surface *ecran)
     SDL_FreeSurface(menu);
     SDL_FreeSurface(start);
     SDL_FreeSurface(controls);
+    SDL_FreeSurface(background);
+    return 0;
+
+
+}
+int menu2(SDL_Surface *ecran)
+{
+    SDL_Surface* menu = NULL;
+    SDL_Surface* facile = NULL;
+    SDL_Surface* moyen = NULL;
+    SDL_Surface* difficile = NULL;
+    SDL_Surface* custom = NULL;
+    SDL_Surface *background = NULL;
+    SDL_Event event;
+    SDL_Rect position_facile, position_moyen, position_difficile, position_custom;
+    SDL_Rect position_menu = {0,0};
+
+    menu = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w,ecran->h,32,0,0,0,0);
+
+    background = IMG_Load("images/background.png");
+
+    facile = IMG_Load("images/facile.png");
+    
+    moyen = IMG_Load("images/moyen.png"); 
+
+    difficile = IMG_Load("images/difficile.png");
+
+    custom = IMG_Load("images/custom.png");
+
+    SDL_BlitSurface(background,NULL,menu,&position_menu);
+
+    position_facile.x = ( ecran->w - facile->w )/2;
+    position_facile.y = 1.5*( ecran->h - facile->h )/8;
+    SDL_BlitSurface(facile,NULL,menu,&position_facile);
+
+    position_moyen.x = ( ecran->w - moyen->w )/2;
+    position_moyen.y = 3.5*( ecran->h - moyen->h )/8;
+    SDL_BlitSurface(moyen,NULL,menu,&position_moyen);
+
+    position_difficile.x = ( ecran->w - difficile->w )/2;
+    position_difficile.y = 5.5*( ecran->h - difficile->h )/8;
+    SDL_BlitSurface(difficile,NULL,menu,&position_difficile);
+
+    position_custom.x = ( ecran->w - custom->w )/2;
+    position_custom.y = 7.5*( ecran->h - custom->h )/8;
+    SDL_BlitSurface(custom,NULL,menu,&position_custom);
+    
+    SDL_BlitSurface(menu,NULL,ecran,&position_menu);
+    SDL_Flip(ecran);
+
+    while(continuer)
+    {
+        SDL_WaitEvent(&event);
+
+        switch (event.type)
+        {
+            case SDL_QUIT:
+                    continuer = 0;
+                    break;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_ESCAPE:
+                    return ESCAPE;
+                    break;
+                }
+                break;
+            case SDL_MOUSEBUTTONUP :
+                switch (event.button.button)
+                {
+                case SDL_BUTTON_LEFT:
+                    if( event.button.x >= position_facile.x && event.button.x <= position_facile.x + facile->w && event.button.y >= position_facile.y && event.button.y <= position_facile.y + facile->h  )
+                    {
+                        SDL_BlitSurface(background,NULL,ecran,&position_menu);
+                        return FACILE;
+                    }
+                    else if( event.button.x >= position_moyen.x && event.button.x <= position_moyen.x + moyen->w && event.button.y >= position_moyen.y && event.button.y <= position_moyen.y + moyen->h  )
+                    {
+                        SDL_BlitSurface(background,NULL,ecran,&position_menu);
+                        return MOYEN;
+                    }
+                    else if( event.button.x >= position_difficile.x && event.button.x <= position_difficile.x + difficile->w && event.button.y >= position_difficile.y && event.button.y <= position_difficile.y + difficile->h  )
+                    {
+                        SDL_BlitSurface(background,NULL,ecran,&position_menu);
+                        return DIFFICILE;
+                    }
+                    else if( event.button.x >= position_custom.x && event.button.x <= position_custom.x + custom->w && event.button.y >= position_custom.y && event.button.y <= position_custom.y + custom->h  )
+                    {
+                        continuer = 0;
+                    }
+                    break;
+                }
+                break;
+                
+        }
+    }
+    SDL_FreeSurface(menu);
+    SDL_FreeSurface(facile);
+    SDL_FreeSurface(moyen);
+    SDL_FreeSurface(difficile);
+    SDL_FreeSurface(custom);
     SDL_FreeSurface(background);
     return 0;
 
