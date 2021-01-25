@@ -22,5 +22,6 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze, matriceDesCell labyr
 void play(SDL_Surface* ecran);
 int menu1(SDL_Surface* ecran);
 int menu2(SDL_Surface *ecran);
+void controls(SDL_Surface *ecran);
 
 #endif

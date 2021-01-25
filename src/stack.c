@@ -47,6 +47,7 @@ int estVide(stack *s)
 int length(stack *s)
 {
     int count=0;
+    
     while(s!=NULL){
         s=s->suivant;
         count++;

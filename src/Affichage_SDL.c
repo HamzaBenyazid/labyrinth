@@ -42,6 +42,8 @@ int SDL_main()
                     break;
                 }
                 break;
+            case 2: controls(ecran);
+                    break;
         }
     }
     SDL_FreeSurface(background);
@@ -248,11 +250,12 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
 void play(SDL_Surface *ecran)
 {
     SDL_Surface *maze ;
+    stack* solved_maze = NULL;
     matriceDesCell labyrinth;
 
     int i;
     int entre[2] = {0} ;
-    int sortie[2][2] = {0} ;
+    int sortie[2][2] ;
 
     while(continuer)
     {
@@ -264,14 +267,15 @@ void play(SDL_Surface *ecran)
         while(i < 2)
         { 
             maze=create_surface(labyrinth);
-            sortie[i][0] = rand()%N;
-            sortie[i][1] = rand()%M;
-            if( i == 1 && sortie[0][0] == sortie[1][0] && sortie[0][1] == sortie[1][1] )
+            do
             {
-                SDL_FreeSurface(maze);
-                continue;
-            }
+                free_stack(solved_maze);
+                sortie[i][0] = rand()%N;
+                sortie[i][1] = rand()%M;
+                solved_maze = solveMaze(labyrinth,entre,sortie[i]);
 
+            } while ( length(solved_maze) < N+M || i*(sortie[0][0] == sortie[1][0] && sortie[0][1] == sortie[1][1]) );
+            
             if (interact(ecran,maze,labyrinth,entre,sortie[i])==0){
                 SDL_FreeSurface(maze);
                 free(labyrinth);
@@ -368,6 +372,7 @@ int menu1(SDL_Surface *ecran)
 
 
 }
+
 int menu2(SDL_Surface *ecran)
 {
     SDL_Surface* menu = NULL;
@@ -451,7 +456,7 @@ int menu2(SDL_Surface *ecran)
                     }
                     else if( event.button.x >= position_custom.x && event.button.x <= position_custom.x + custom->w && event.button.y >= position_custom.y && event.button.y <= position_custom.y + custom->h  )
                     {
-                        continuer = 0;
+                        //custom
                     }
                     break;
                 }
@@ -469,3 +474,28 @@ int menu2(SDL_Surface *ecran)
 
 
 }
+
+void controls(SDL_Surface *ecran)
+{
+    SDL_Surface *controls;
+    SDL_Event event;
+    SDL_Rect position = {0,0};
+
+    controls = IMG_Load("images/background.png");
+    SDL_BlitSurface(controls,NULL,ecran,&position);
+    SDL_Flip(ecran);
+
+    while(continuer)
+    {
+        SDL_WaitEvent(&event);
+
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_ESCAPE:
+            SDL_FreeSurface(controls);
+            return ;
+            break;
+        }
+    }
+}
+
