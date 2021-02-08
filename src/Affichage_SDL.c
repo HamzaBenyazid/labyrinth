@@ -4,8 +4,8 @@ int cotes[3]={32,16,8}; //cote d'une cellule de labyrinthe
 char* sols[3]={"images/sol32.bmp","images/sol16.bmp","images/sol08.bmp"};
 char* objets[3]={"images/yellowball32.png","images/yellowball16.png","images/yellowball08.png"};
 char* trophies[3]={"images/Trophy32.png","images/Trophy16.png","images/Trophy08.png"};
-int choix;
-int continuer = 1;
+int choix; //cette variable désigne la difficulté choisi
+int continuer = 1; //cette variable désigne si le programme s'arrete ou continue
 
 int SDL_main()
 {
@@ -13,16 +13,13 @@ int SDL_main()
     SDL_Rect position = {0,0};
     SDL_Surface *background = IMG_Load("images/background.png");
     SDL_Init(SDL_INIT_VIDEO);
-    
-    N = 14;
-    M = 24;
 
     ecran = SDL_SetVideoMode(1200, 701, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_BlitSurface(background,NULL,ecran,&position);
     
     while (continuer){
-        switch(menu1(ecran)){
-            case 1: switch(choix=menu2(ecran))
+        switch(menu1(ecran)){//le menu 1 est afficher et la fonction retourne un int selon le bouton que l'utilisateur a cliqué
+            case 1: switch(choix=menu2(ecran)) // le menu 2 est afficher qui contient les diffucltés
                 {
                     case FACILE :
                         N=5;
@@ -52,6 +49,7 @@ int SDL_main()
     return EXIT_SUCCESS;
 }
 
+//cette fonction retourne la surface contenant le labyrinthe tracé
 SDL_Surface* create_surface(matriceDesCell labyrinthe)
 {
     int size_ligne=N*2+(N+1); 
@@ -63,7 +61,7 @@ SDL_Surface* create_surface(matriceDesCell labyrinthe)
 
     SDL_Rect position;
 
-    int cote=cotes[choix];
+    int cote=cotes[choix]; // cette variable désigne le nombre de pixels avec lequel on va travailler (une cellule contient (2*cote * 2*cote) pixels)
 
     maze = SDL_CreateRGBSurface(SDL_HWSURFACE,size_colonne*cote,size_ligne*cote, 32, 0, 0, 0, 0);
 
@@ -86,10 +84,11 @@ SDL_Surface* create_surface(matriceDesCell labyrinthe)
     return maze;
 }
 
-SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2])
+// cette fonction fait colorer le chemin de resolution dans la surface du labyrinthe 
+void SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2])
 {
-    SDL_Surface* careau = NULL;
-    SDL_Surface* rectangle_horiz = NULL;
+    SDL_Surface* careau = NULL; // cette variable pour colorer chaque cellule qui appartient au chemin de solution
+    SDL_Surface* rectangle_horiz = NULL; //cette variable et la variable suivante sont utile pour colorer l'espace entre deux cellules qui est normalement un mur ou un vide 
     SDL_Surface* rectangle_verti = NULL;
     SDL_Rect position, position_rectangle;
     int cote=cotes[choix];
@@ -105,7 +104,7 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
     SDL_FillRect(rectangle_horiz, NULL, SDL_MapRGB(rectangle_horiz->format, 0, 255, 0)); 
 
 
-    while( path != NULL )
+    while( path != NULL ) // tant qu'on n'a pas colorer tous les cellules de l'entrée vers la sortie
     {
         position.x = (path->colonne)*2*cote + (path->colonne+1)*cote;
         position.y = (path->ligne)*2*cote + (path->ligne+1)*cote;
@@ -118,7 +117,7 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
                     position_rectangle.x = position.x + cote*2 ;
                 else 
                     position_rectangle.x = position.x - cote ;
-                SDL_BlitSurface(rectangle_verti,NULL,maze,&position_rectangle);
+                SDL_BlitSurface(rectangle_verti,NULL,maze,&position_rectangle); 
             }
             else 
             {    
@@ -140,12 +139,12 @@ SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int 
     SDL_FreeSurface(rectangle_verti);
     free_stack(path);
 
-    return maze;
 }
 
+// cette fonction est la fonction qui affiche le labyrinthe et nous donne la possibité de déplacer l'objer jusqu'on arrive à la sortie 
 int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyrinth ,int entre[2],int sortie[2])
 {
-    //int size_ligne=N*2+(N+1); //unused_variable
+
     int size_colonne=M*2+(M+1);
     
     //Les surfaces utilisees
@@ -169,13 +168,14 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
     //event 
     SDL_Event event;
     
-
+    // affichage du labyrinthe avec l'objet et le trophy dans la sortie
     SDL_EnableKeyRepeat(30, 30);
     maze_copy=SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
     SDL_BlitSurface(objet,NULL,maze_copy,&positionObjet);
     SDL_BlitSurface(trophy,NULL,maze_copy,&positionTrophy);
     SDL_BlitSurface(maze_copy,NULL,ecran,&positionMaze);
     SDL_Flip(ecran);
+    
     
     while (continuer)
     {
@@ -213,7 +213,7 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
                             positionObjet.x-=cote;
                             colonne--;
                         }break;
-                    case SDLK_SPACE:
+                    case SDLK_SPACE: // si l'utilisateur clique sur espace le labyrinthe qui s'afficher doit être résolue si il clique une fois on retourne au labyrinthe original
                         SDL_EnableKeyRepeat(0, 30);
                         if(solved == 0)
                             solved = 1;
@@ -224,9 +224,11 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
                 
                 current_position[0]= positionObjet.y/cote/3 ;
                 current_position[1]= positionObjet.x/cote/3 ;
-
+                
                 SDL_FreeSurface(maze_copy);
                 maze_copy= SDL_ConvertSurface(maze,maze->format,SDL_HWSURFACE);
+
+                //si solved = 1 alors on on met a jour le labyrinthe avec le résolution selon la position courante de l'objet
                 if(solved)
                     SDL_Solution(labyrinth,maze_copy,current_position,sortie);
                 
@@ -236,6 +238,8 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
                 SDL_Flip(ecran);
                 break;
         }
+
+        //ici si on arrive à la position de sortie on sort de la fonction
         if(positionTrophy.x == positionObjet.x && positionTrophy.y == positionObjet.y)
         {
             SDL_FreeSurface(maze_copy);
@@ -247,6 +251,7 @@ int interact(SDL_Surface *ecran,SDL_Surface *original_maze,matriceDesCell labyri
     }
 }
 
+//cette fonction permet d'afficher le jeu après que l'utilisateur clique sur le bouton "play"
 void play(SDL_Surface *ecran)
 {
     SDL_Surface *maze ;
@@ -254,19 +259,26 @@ void play(SDL_Surface *ecran)
     matriceDesCell labyrinth;
 
     int i;
-    int entre[2] = {0} ;
+    int entre[2] ;
     int sortie[2][2] ;
 
     while(continuer)
     {
+        // on genere à chaque fois un nouveau labyrinthe 
         labyrinth = generate_maze();
         maze=create_surface(labyrinth);
-        entre[0] = rand()%N;
+
+        //les position d'entre sont générere aléatoirement
+        entre[0] = rand()%N; 
         entre[1] = rand()%M;
+        
+        // cette boucle va permettre d'afficher un labyrinthe et pour sortir in faut le résoudre avec la premier sortie et la deuxième sortie
         i = 0;
         while(i < 2)
         { 
             maze=create_surface(labyrinth);
+            /*ici on assure que la deuxième position de sortie est différente de la première et que le labyrinthe à résoudre n'est pas 
+              évident c'est pour cela on a mis la condition de lenght(solve_maze < (N+M)) */
             do
             {
                 free_stack(solved_maze);
@@ -276,6 +288,7 @@ void play(SDL_Surface *ecran)
 
             } while ( length(solved_maze) < N+M || i*(sortie[0][0] == sortie[1][0] && sortie[0][1] == sortie[1][1]) );
             
+            // interace retourne 0 lorsqu'on clique sur ESCAPE dans ce cas on sort de fonction play et on retourne au menu principale
             if (interact(ecran,maze,labyrinth,entre,sortie[i])==0){
                 SDL_FreeSurface(maze);
                 free(labyrinth);
@@ -288,6 +301,7 @@ void play(SDL_Surface *ecran)
     }
 }
 
+//cette fonction afficher le menu principale qui s'affiche au début
 int menu1(SDL_Surface *ecran)
 {
     SDL_Surface* menu = NULL;
@@ -373,6 +387,7 @@ int menu1(SDL_Surface *ecran)
 
 }
 
+//cette fonction afficher le menu qui donne à l'utilisateur la possibilité de choisir un niveau de difficulté
 int menu2(SDL_Surface *ecran)
 {
     SDL_Surface* menu = NULL;
@@ -475,6 +490,7 @@ int menu2(SDL_Surface *ecran)
 
 }
 
+//cette fonction ne fait rien qu'afficher les controls de jeux 
 void controls(SDL_Surface *ecran)
 {
     SDL_Surface *controls;

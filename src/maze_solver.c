@@ -1,12 +1,13 @@
 #include"maze_solver.h"
 
 
-
+//cette fonction fait la même chose que la fonction "randompath" sauf qu'on ajoute une condition pour assurer que le chemin qu'on va suivre n'est pas bloqué par un mur .
 int randomPath_Sol(matriceDesCell m,int line,int col,int* visited)
 {
     cell in=*(m+M*line+col);
     int tab[4];
     int count=0;
+
     if (in.up==1 &&*(visited+(line-1)*M+col)==0) {
         tab[count]=up;
         count++;
@@ -28,6 +29,8 @@ int randomPath_Sol(matriceDesCell m,int line,int col,int* visited)
         return tab[rand()%count];
     }
 }
+
+// cette fonction va retourner le chemin quand va suivre sous forme d'un pile pour une entrée et une sortie données on appliquant un algorithme qui est bien décrit dans le rapport
 stack* solveMaze(matriceDesCell maze,int entre[2],int sortie[2])
 {
     stack* solution=NULL;
@@ -43,10 +46,10 @@ stack* solveMaze(matriceDesCell maze,int entre[2],int sortie[2])
     
     i = entre[0];
     j = entre[1];
-    append(&solution, i, j);
-    while(i!=sortie[0] || j!=sortie[1])
+    append(&solution, i, j); // on ajoute la cellule de départ à la pile
+    while(i!=sortie[0] || j!=sortie[1]) 
     {
-        way = randomPath_Sol(maze, i, j,visited);
+        way = randomPath_Sol(maze, i, j,visited); 
         *(visited+i*M+j) = 1;
         switch(way)
         {

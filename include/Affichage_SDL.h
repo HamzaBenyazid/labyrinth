@@ -17,7 +17,7 @@
 
 int SDL_main();
 SDL_Surface* create_surface(matriceDesCell labyrithe);
-SDL_Surface* SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2]);
+void SDL_Solution(matriceDesCell m, SDL_Surface* maze,int entre[2], int sortie[2]);
 int interact(SDL_Surface *ecran,SDL_Surface *original_maze, matriceDesCell labyrinth,int entre[2],int sortie[2]);
 void play(SDL_Surface* ecran);
 int menu1(SDL_Surface* ecran);

@@ -1,6 +1,6 @@
 #include"stack.h"
 
-
+//cette fonction fait l'empilement
 void append(stack **s, int i, int j)
 {
     stack *nouveau=Malloc(stack);
@@ -9,6 +9,8 @@ void append(stack **s, int i, int j)
     nouveau->suivant=*(s);
     *(s)=nouveau;
 }
+
+//cette fonction affiche la pile (nous avons eu besoins de cette fonction dans le debug)
 void afficherStack(stack *s)
 {
     printf("\n\n");
@@ -17,6 +19,8 @@ void afficherStack(stack *s)
         s=s->suivant;
     }
 }
+
+//cette fonction fait le dépilement
 void pop(stack **s)
 {
     stack* previous;
@@ -28,6 +32,7 @@ void pop(stack **s)
     }
 }
 
+// cette fonction retourne les coordonne de la cellule qui est dans la tête de la pile
 int* top(stack *s) 
 {
     int* coordonne = (int*)malloc(sizeof(int)*2);
@@ -40,10 +45,14 @@ int* top(stack *s)
     *(coordonne+1) = s->colonne;
     return coordonne;
 }
+
+//fonction qui retourne si la pile est vide ou non
 int estVide(stack *s)
 {
     return (s==NULL);
 }
+
+//fonction qui retourne la longueur de la pile
 int length(stack *s)
 {
     int count=0;
@@ -55,6 +64,7 @@ int length(stack *s)
     return count;
 }
 
+//fonction qui libére la pile de la mémoire
 void free_stack(stack *s)
 {
     stack* previous;
