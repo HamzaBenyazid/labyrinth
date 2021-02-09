@@ -39,8 +39,6 @@ int SDL_main()
                     break;
                 }
                 break;
-            case 2: controls(ecran);
-                    break;
         }
     }
     SDL_FreeSurface(background);
@@ -306,12 +304,11 @@ int menu1(SDL_Surface *ecran)
 {
     SDL_Surface* menu = NULL;
     SDL_Surface* start = NULL;
-    SDL_Surface* controls = NULL;
     SDL_Surface* quit = NULL;
     SDL_Surface* title = NULL;
     SDL_Surface *background = IMG_Load("images/background.png");
     SDL_Event event;
-    SDL_Rect position_start, position_controls, position_quit, position_title;
+    SDL_Rect position_start, position_quit, position_title;
     SDL_Rect position_menu = {0,0};
 
     menu = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w,ecran->h,32,0,0,0,0);
@@ -319,8 +316,6 @@ int menu1(SDL_Surface *ecran)
     title = IMG_Load("images/labyrinthe.png");
 
     start = IMG_Load("images/start.png");
-    
-    controls = IMG_Load("images/controls.png"); 
 
     quit = IMG_Load("images/quit.png");
 
@@ -332,15 +327,12 @@ int menu1(SDL_Surface *ecran)
 
     
     position_start.x = ( ecran->w - start->w )/2;
-    position_start.y = 3.5*( ecran->h - start->h )/8;
+    position_start.y = 4*( ecran->h - start->h )/8;
     SDL_BlitSurface(start,NULL,menu,&position_start);
 
-    position_controls.x = ( ecran->w - controls->w )/2;
-    position_controls.y = 5.5*( ecran->h - controls->h )/8;
-    SDL_BlitSurface(controls,NULL,menu,&position_controls);
 
     position_quit.x = ( ecran->w - quit->w )/2;
-    position_quit.y = 7.5*( ecran->h - quit->h )/8;
+    position_quit.y = 6*( ecran->h - quit->h )/8;
     SDL_BlitSurface(quit,NULL,menu,&position_quit);
     
     
@@ -365,10 +357,6 @@ int menu1(SDL_Surface *ecran)
                         SDL_BlitSurface(background,NULL,ecran,&position_menu);
                         return 1;
                     }
-                    else if( event.button.x >= position_controls.x && event.button.x <= position_controls.x + controls->w && event.button.y >= position_controls.y && event.button.y <= position_controls.y + controls->h  )
-                    {
-                        return 2;
-                    }
                     else if( event.button.x >= position_quit.x && event.button.x <= position_quit.x + quit->w && event.button.y >= position_quit.y && event.button.y <= position_quit.y + quit->h  )
                     {
                         continuer = 0;
@@ -380,11 +368,9 @@ int menu1(SDL_Surface *ecran)
     }
     SDL_FreeSurface(menu);
     SDL_FreeSurface(start);
-    SDL_FreeSurface(controls);
     SDL_FreeSurface(background);
+    
     return 0;
-
-
 }
 
 //cette fonction afficher le menu qui donne à l'utilisateur la possibilité de choisir un niveau de difficulté
@@ -394,10 +380,9 @@ int menu2(SDL_Surface *ecran)
     SDL_Surface* facile = NULL;
     SDL_Surface* moyen = NULL;
     SDL_Surface* difficile = NULL;
-    SDL_Surface* custom = NULL;
     SDL_Surface *background = NULL;
     SDL_Event event;
-    SDL_Rect position_facile, position_moyen, position_difficile, position_custom;
+    SDL_Rect position_facile, position_moyen, position_difficile;
     SDL_Rect position_menu = {0,0};
 
     menu = SDL_CreateRGBSurface(SDL_HWSURFACE,ecran->w,ecran->h,32,0,0,0,0);
@@ -410,26 +395,20 @@ int menu2(SDL_Surface *ecran)
 
     difficile = IMG_Load("images/difficile.png");
 
-    custom = IMG_Load("images/custom.png");
-
     SDL_BlitSurface(background,NULL,menu,&position_menu);
 
     position_facile.x = ( ecran->w - facile->w )/2;
-    position_facile.y = 1.5*( ecran->h - facile->h )/8;
+    position_facile.y = 2*( ecran->h - facile->h )/8;
     SDL_BlitSurface(facile,NULL,menu,&position_facile);
 
     position_moyen.x = ( ecran->w - moyen->w )/2;
-    position_moyen.y = 3.5*( ecran->h - moyen->h )/8;
+    position_moyen.y = 4*( ecran->h - moyen->h )/8;
     SDL_BlitSurface(moyen,NULL,menu,&position_moyen);
 
     position_difficile.x = ( ecran->w - difficile->w )/2;
-    position_difficile.y = 5.5*( ecran->h - difficile->h )/8;
+    position_difficile.y = 6*( ecran->h - difficile->h )/8;
     SDL_BlitSurface(difficile,NULL,menu,&position_difficile);
 
-    position_custom.x = ( ecran->w - custom->w )/2;
-    position_custom.y = 7.5*( ecran->h - custom->h )/8;
-    SDL_BlitSurface(custom,NULL,menu,&position_custom);
-    
     SDL_BlitSurface(menu,NULL,ecran,&position_menu);
     SDL_Flip(ecran);
 
@@ -469,10 +448,6 @@ int menu2(SDL_Surface *ecran)
                         SDL_BlitSurface(background,NULL,ecran,&position_menu);
                         return DIFFICILE;
                     }
-                    else if( event.button.x >= position_custom.x && event.button.x <= position_custom.x + custom->w && event.button.y >= position_custom.y && event.button.y <= position_custom.y + custom->h  )
-                    {
-                        //custom
-                    }
                     break;
                 }
                 break;
@@ -483,35 +458,7 @@ int menu2(SDL_Surface *ecran)
     SDL_FreeSurface(facile);
     SDL_FreeSurface(moyen);
     SDL_FreeSurface(difficile);
-    SDL_FreeSurface(custom);
     SDL_FreeSurface(background);
     return 0;
 
-
 }
-
-//cette fonction ne fait rien qu'afficher les controls de jeux 
-void controls(SDL_Surface *ecran)
-{
-    SDL_Surface *controls;
-    SDL_Event event;
-    SDL_Rect position = {0,0};
-
-    controls = IMG_Load("images/background.png");
-    SDL_BlitSurface(controls,NULL,ecran,&position);
-    SDL_Flip(ecran);
-
-    while(continuer)
-    {
-        SDL_WaitEvent(&event);
-
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_ESCAPE:
-            SDL_FreeSurface(controls);
-            return ;
-            break;
-        }
-    }
-}
-
