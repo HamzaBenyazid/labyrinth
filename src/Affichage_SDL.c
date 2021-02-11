@@ -274,7 +274,6 @@ void play(SDL_Surface *ecran)
         i = 0;
         while(i < 2)
         { 
-            maze=create_surface(labyrinth);
             /*ici on assure que la deuxième position de sortie est différente de la première et que le labyrinthe à résoudre n'est pas 
               évident c'est pour cela on a mis la condition de lenght(solve_maze < (N+M)) */
             do
@@ -292,9 +291,9 @@ void play(SDL_Surface *ecran)
                 free(labyrinth);
                 return;
             }
-            SDL_FreeSurface(maze);
             i++;
         }
+        SDL_FreeSurface(maze);
         free(labyrinth);
     }
 }
