@@ -14,7 +14,9 @@ int SDL_main()
     SDL_Surface *background = IMG_Load("images/background.png");
     SDL_Init(SDL_INIT_VIDEO);
 
+    SDL_WM_SetIcon(IMG_Load("images/icon.jpg"), NULL);
     ecran = SDL_SetVideoMode(1200, 701, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
+    SDL_WM_SetCaption("Labyrinthe", NULL);
     SDL_BlitSurface(background,NULL,ecran,&position);
     
     while (continuer){
