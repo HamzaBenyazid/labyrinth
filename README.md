@@ -10,8 +10,6 @@ Made during first year of engineering school (programming course).
     <img src="https://i.imgur.com/Tc1KGP1.png" alt="screenshot">
 </p>
 
-> :warning: This game has been developed and written in French.
-
 ## Some Features
 
 * Basic labyrinth game in a graphic interface with SDL
